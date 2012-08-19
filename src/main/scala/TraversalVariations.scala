@@ -31,7 +31,7 @@ object WordsGenerator {
 
 class TraversalVariations extends SimpleScalaBenchmark {
   
-  @Param(Array("10", "100", "1000", "10000", "100000" ))
+  @Param(Array("10", "100", "1000", "10000", "100000"))
   val length: Int = 0
   
   var words: List[String] = _
@@ -58,6 +58,16 @@ class TraversalVariations extends SimpleScalaBenchmark {
     ( wLength, wCaps )
   }
   
+  def timeFunctional(reps: Int) = repeat(reps) {
+    val wLength = words.map( _.length )
+    val wCaps = words.map( isCapitalized )
+    (wLength, wCaps) 
+  }
+  
+  def timeFunctionalZipped(reps:Int) = repeat(reps) {
+    words.view.map(w => (w.length,isCapitalized(w))).unzip
+  }
+  /*
   def timeOldSchoolSafe(reps: Int) = repeat(reps) {
     val n = words.length
     val wLength = Array.ofDim[Int](n)
@@ -71,12 +81,6 @@ class TraversalVariations extends SimpleScalaBenchmark {
       i += 1
     }
     ( wLength.toList, wCaps.toList )
-  }
-
-  def timeFunctional(reps: Int) = repeat(reps) {
-    val wLength = words.map( _.length )
-    val wCaps = words.map( isCapitalized )
-    (wLength, wCaps) 
   }
   
   def timeRecurs(reps: Int) = repeat(reps) {
@@ -125,7 +129,7 @@ class TraversalVariations extends SimpleScalaBenchmark {
    }
    ( wLength.toList, wCaps.toList )
  }
-
+// */
   override def tearDown() {
     // clean up after yourself if required
   }
